@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Đọc Chinh phụ ngâm với nguyên văn, giải nghĩa tiếng Việt hiện đại, từ cổ, Hán-Việt và điển tích theo từng trang.">
+  <title>Chinh Phụ Ngâm — Nguyên văn & Giải nghĩa</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="menuBtn" class="icon-btn" type="button" aria-label="Mở mục lục">☰</button>
+    <a class="brand" href="#home" aria-label="Chinh phụ ngâm - trang đầu">
+      <span class="brand-mark">C</span>
+      <span>chinhphungam://giai-nghia</span>
+    </a>
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input id="searchInput" type="search" autocomplete="off" placeholder="Tìm câu thơ, từ cổ, điển tích..." aria-label="Tìm trong Chinh phụ ngâm">
+      <kbd>Ctrl K</kbd>
+      <div id="searchResults" class="search-results" hidden></div>
+    </div>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Đổi giao diện sáng tối">◐</button>
+  </header>
+
+  <div class="shell">
+    <aside id="sidebar" aria-label="Mục lục">
+      <div class="side-heading">CHINH PHỤ NGÂM</div>
+      <a class="nav-main active" href="#home">Giới thiệu</a>
+      <div class="side-heading section-label">MẠCH TÁC PHẨM</div>
+      <nav id="contextNav"></nav>
+      <div class="side-stat">
+        <b id="lineCount">—</b>
+        <span>câu đang đọc từ Wikisource</span>
+      </div>
+      <a class="source-link" href="https://vi.wikisource.org/wiki/Chinh_ph%E1%BB%A5_ng%C3%A2m_(%C4%90o%C3%A0n_Th%E1%BB%8B_%C4%90i%E1%BB%83m_d%E1%BB%8Bch)" target="_blank" rel="noopener">Mở bản nguồn ↗</a>
+    </aside>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="eyebrow">ĐẶNG TRẦN CÔN · CHINH PHỤ NGÂM</div>
+        <h1>Đọc <em>nguyên văn</em>.<br>Hiểu nỗi lòng chinh phụ.</h1>
+        <p class="lead">Mỗi câu thơ nằm ngay cạnh phần giải thích tiếng Việt hiện đại. Từ cổ, Hán-Việt, điển tích và cách nói văn chương được tách riêng để có thể đọc tác phẩm mà không phải liên tục tra cứu nơi khác.</p>
+        <div class="hero-actions">
+          <a class="primary" href="#reader">Bắt đầu đọc →</a>
+          <span id="sourceStatus" class="source-status" aria-live="polite">Đang tải văn bản từ Wikisource…</span>
+        </div>
+      </section>
+
+      <section class="about-grid" aria-label="Cách đọc trang">
+        <article><b>01</b><strong>Nguyên văn</strong><span>Văn bản được tải từ bản Wikisource đang chọn.</span></article>
+        <article><b>02</b><strong>Hiểu đơn giản</strong><span>Diễn đạt lại ý câu bằng tiếng Việt hiện đại khi đã có chú giải.</span></article>
+        <article><b>03</b><strong>Từ khó</strong><span>Từ cổ, Hán-Việt và điển tích xuất hiện ngay cạnh câu.</span></article>
+        <article><b>04</b><strong>Phân trang</strong><span>24 câu mỗi trang để đọc thoáng và giữ hai cột thẳng hàng.</span></article>
+      </section>
+
+      <section class="source-note">
+        <div class="eyebrow">VỀ BẢN VĂN</div>
+        <p>Nguyên tác chữ Hán là của <strong>Đặng Trần Côn</strong>. Trang Wikisource dùng làm nguồn cho website này ghi bản diễn Nôm theo truyền thống gắn với <strong>Đoàn Thị Điểm</strong>, đồng thời lưu ý hiện có ý kiến cho rằng bản phổ biến là của <strong>Phan Huy Ích</strong>. Website giữ nguyên ghi chú đó, không cố giải quyết tranh luận văn bản học.</p>
+      </section>
+
+      <section id="reader" class="reader">
+        <div class="reader-head">
+          <div>
+            <small>NGUYÊN VĂN · HIỂU ĐƠN GIẢN · TỪ KHÓ</small>
+            <h2 id="pageTitle">Đang tải…</h2>
+          </div>
+          <span id="pageRange">—</span>
+        </div>
+
+        <div id="loadError" class="load-error" hidden>
+          <strong>Không tải được văn bản.</strong>
+          <p id="loadErrorText"></p>
+          <a href="https://vi.wikisource.org/wiki/Chinh_ph%E1%BB%A5_ng%C3%A2m_(%C4%90o%C3%A0n_Th%E1%BB%8B_%C4%90i%E1%BB%83m_d%E1%BB%8Bch)" target="_blank" rel="noopener">Đọc bản nguồn trên Wikisource ↗</a>
+        </div>
+
+        <div id="readerContent" class="reader-card" aria-live="polite">
+          <div class="loading">Đang chuẩn bị văn bản và phần giải nghĩa…</div>
+        </div>
+
+        <div id="pagination" class="pagination" hidden>
+          <button id="prevBtn" class="page-btn" type="button">← Trang trước</button>
+          <label class="page-select-wrap">
+            <span>TRANG</span>
+            <select id="pageSelect" aria-label="Chọn trang"></select>
+          </label>
+          <span id="pagePosition" class="page-position">—</span>
+          <button id="nextBtn" class="page-btn" type="button">Trang sau →</button>
+        </div>
+      </section>
+
+      <footer>
+        chinhphungam://giải-nghĩa · static reader · nguồn văn bản: <a href="https://vi.wikisource.org/" target="_blank" rel="noopener">Wikisource</a>
+      </footer>
+    </main>
+  </div>
+
+  <script type="module" src="js/app.mjs"></script>
+</body>
+</html>
