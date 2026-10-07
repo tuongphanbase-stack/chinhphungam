@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Chinh Phụ Ngâm — Nguyên văn & Giải nghĩa",
+  "short_name": "Chinh Phụ Ngâm",
+  "description": "Đọc Chinh phụ ngâm với nguyên văn, giải nghĩa tiếng Việt hiện đại, từ cổ, Hán-Việt và điển tích theo từng trang. Đọc được cả khi không có mạng sau lần mở đầu tiên.",
+  "lang": "vi",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6f7",
+  "theme_color": "#ffffff",
+  "categories": ["books", "education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

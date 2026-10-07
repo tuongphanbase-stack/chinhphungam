@@ -1,18 +1,25 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" data-theme-key="chinhphungam_theme">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Đọc Chinh phụ ngâm với nguyên văn, giải nghĩa tiếng Việt hiện đại, từ cổ, Hán-Việt và điển tích theo từng trang.">
   <title>Chinh Phụ Ngâm — Nguyên văn & Giải nghĩa</title>
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="Chinh Phụ Ngâm">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <script src="js/site.js"></script>
+  <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="topbar">
-    <button id="menuBtn" class="icon-btn" type="button" aria-label="Mở mục lục">☰</button>
-    <a class="brand" href="#home" aria-label="Chinh phụ ngâm - trang đầu">
-      <span class="brand-mark">C</span>
-      <span>chinhphungam://giai-nghia</span>
+    <button id="menuBtn" class="icon-btn menu-btn" type="button" aria-label="Mở mục lục">☰</button>
+    <a class="brand" href="#home" aria-label="Chinh Phụ Ngâm - trang đầu">
+      <span class="brand-mark" aria-hidden="true">C</span>
+      <span class="brand-name">Chinh Phụ Ngâm</span>
     </a>
     <div class="search-wrap">
       <span class="search-icon" aria-hidden="true">⌕</span>
@@ -20,7 +27,9 @@
       <kbd>Ctrl K</kbd>
       <div id="searchResults" class="search-results" hidden></div>
     </div>
-    <button id="themeBtn" class="icon-btn" type="button" aria-label="Đổi giao diện sáng tối">◐</button>
+    <div class="topbar-actions">
+      <button id="themeBtn" class="icon-btn" type="button" data-theme-toggle title="Đổi nền sáng/tối" aria-label="Đổi nền sáng/tối">☾</button>
+    </div>
   </header>
 
   <div class="shell">
@@ -96,8 +105,12 @@
         </div>
       </section>
 
-      <footer>
-        chinhphungam://giải-nghĩa · static reader · nguồn văn bản: <a href="https://vi.wikisource.org/" target="_blank" rel="noopener">Wikisource</a>
+      <footer class="site-footer">
+        <p class="site-footer-note">Nguồn văn bản: <a href="https://vi.wikisource.org/" target="_blank" rel="noopener">Wikisource</a><span class="shortcuts"> · Phím tắt: <kbd>←</kbd> <kbd>→</kbd> chuyển trang · <kbd>Ctrl K</kbd> tìm kiếm.</span></p>
+        <nav class="site-footer-links" aria-label="Đọc thêm">
+          <a class="crosslink" href="https://tuongphanbase-stack.github.io/truyenkieu/" style="--mark:#755044"><span class="crosslink-mark" aria-hidden="true">K</span><span>Đọc thêm: <strong>Truyện Kiều</strong> →</span></a>
+          <a class="projects-link" href="https://tuongphanbase-stack.github.io/emailer-dashboard/projects.html">Các dự án khác</a>
+        </nav>
       </footer>
     </main>
   </div>

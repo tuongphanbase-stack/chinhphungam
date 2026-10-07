@@ -11,7 +11,7 @@ const state = { lines: [], pages: [], page: 0, speaking: false };
 
 const $ = selector => document.querySelector(selector);
 const els = {
-  menuBtn: $('#menuBtn'), themeBtn: $('#themeBtn'), sidebar: $('#sidebar'),
+  menuBtn: $('#menuBtn'), sidebar: $('#sidebar'),
   searchInput: $('#searchInput'), searchResults: $('#searchResults'),
   sourceStatus: $('#sourceStatus'), lineCount: $('#lineCount'), contextNav: $('#contextNav'),
   pageTitle: $('#pageTitle'), pageRange: $('#pageRange'), readerContent: $('#readerContent'),
@@ -22,11 +22,7 @@ const els = {
   speechNote: $('#speechNote')
 };
 
-function applyTheme(theme) {
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-  localStorage.setItem('chinhphungam_theme', theme);
-}
-applyTheme(localStorage.getItem('chinhphungam_theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+// The light/dark theme is handled by js/site.js (shared with the Truyện Kiều reader).
 
 function glossaryMatches(line) {
   const normalized = normalizeText(line);
@@ -271,7 +267,6 @@ async function boot() {
 }
 
 els.menuBtn.addEventListener('click', () => els.sidebar.classList.toggle('open'));
-els.themeBtn.addEventListener('click', () => applyTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark'));
 els.prevBtn.addEventListener('click', () => goToPage(state.page - 1));
 els.nextBtn.addEventListener('click', () => goToPage(state.page + 1));
 els.pageSelect.addEventListener('change', event => goToPage(Number(event.target.value)));

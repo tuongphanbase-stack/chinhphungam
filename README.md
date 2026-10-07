@@ -18,6 +18,18 @@ Static web reader for *Chinh phụ ngâm*: original Vietnamese text on the left,
 - Verse images: 🖼 turns the line's four-line stanza into a square image to share or download (matches the light/dark theme).
 - System fonts only, so Vietnamese glyphs do not depend on a webfont download.
 - No framework, backend, build step, or external runtime dependency besides the Wikisource text request.
+- **Installable app that works offline** (see below).
+- Same look as its sister site, the [Truyện Kiều reader](https://tuongphanbase-stack.github.io/truyenkieu/), with its own indigo accent; the footer links to it and to the [project list](https://tuongphanbase-stack.github.io/emailer-dashboard/projects.html).
+
+## Install on a phone
+
+The site is a Progressive Web App, so it can be added to the home screen and opens full screen like an app:
+
+- **Android (Chrome):** open the site, tap **⋮** → **Install app** / **Add to Home screen** (*Cài đặt ứng dụng* / *Thêm vào màn hình chính*).
+- **iPhone / iPad (Safari):** tap **Share** → **Add to Home Screen** (*Thêm vào MH chính*).
+- **Computer (Chrome / Edge):** click the install icon at the right of the address bar.
+
+Open it once while online: the app itself is then cached by the service worker and the poem text is kept in the browser's storage, so it keeps working without a connection.
 
 ## Text source and attribution note
 
@@ -48,14 +60,25 @@ This is a plain static site. Push the repository to GitHub, then in **Settings �
 
 ```text
 index.html
-css/style.css
-js/app.mjs          # UI/state/rendering
-js/source.mjs       # Wikisource API + parser
-js/content.mjs      # glossary + curated explanations + contexts
-js/utils.mjs        # pagination/search helpers
-tests/              # Node built-in tests
-docs/superpowers/   # design + implementation plan
+css/site.css          # shared look (tokens, header, footer, light/dark), same file as in truyenkieu
+css/style.css         # this site's accent colour and reader components
+js/site.js            # shared: theme before first paint, theme button, service-worker registration
+js/app.mjs            # UI/state/rendering
+js/source.mjs         # Wikisource API + parser
+js/content.mjs        # glossary + curated explanations + contexts
+js/extras.mjs         # bookmarks, resume, read aloud, verse images, saved text
+js/utils.mjs          # pagination/search helpers
+manifest.webmanifest  # installable app: name, colours, icons
+sw.js                 # service worker (offline)
+icons/                # app icons (192, 512, maskable 512, Apple touch, favicon)
+tests/                # Node built-in tests
+docs/superpowers/     # design + implementation plan
 ```
+
+## Shared look and the offline app
+
+- `css/site.css` and `js/site.js` are **identical copies** of the files in the `truyenkieu` repo. Edit both copies together; each site sets only its own accent colour at the top of its stylesheet (`css/style.css` here).
+- `sw.js` serves the files listed in `SHELL` from its cache first, so bump `VERSION` in `sw.js` whenever you change any of them, or visitors keep the old copy. `tests/pwa.test.mjs` fails if a file the page loads (including modules imported by `app.mjs`) is missing from `SHELL`. Requests to Wikisource are never cached by the service worker; the reader keeps the text in `localStorage` itself.
 
 ## Explanation coverage
 

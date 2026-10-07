@@ -110,8 +110,8 @@ export function renderVerseImage(lines, { from, to, dark = false, size = 1080 } 
   canvas.width = canvas.height = size;
   const ctx = canvas.getContext('2d');
   const c = dark
-    ? { bg1: '#201c1b', bg2: '#2b2321', ink: '#f1ece9', muted: '#b9aea9', accent: '#d1a094' }
-    : { bg1: '#fbf8f6', bg2: '#f1e7e2', ink: '#241c19', muted: '#7a6c66', accent: '#755044' };
+    ? { bg1: '#1b1d22', bg2: '#232a35', ink: '#eef1f6', muted: '#aab4c3', accent: '#9fb4d4' }
+    : { bg1: '#f8f9fc', bg2: '#e4eaf3', ink: '#1b2230', muted: '#5f6b7d', accent: '#3b5478' };
 
   const grad = ctx.createLinearGradient(0, 0, size, size);
   grad.addColorStop(0, c.bg1);
