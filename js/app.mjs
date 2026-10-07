@@ -1,9 +1,13 @@
 import { fetchPoem, SOURCE_PAGE } from './source.mjs';
 import { paginate, searchLines, normalizeText } from './utils.mjs';
 import { GLOSSARY, CONTEXTS, notesForLine, contextForLine } from './content.mjs';
+import {
+  KEYS, readJSON, writeJSON, cachedLines, cacheLines, getBookmarks, toggleBookmark,
+  stanzaRange, speakLines, stopSpeaking, vietnameseVoice, renderVerseImage, shareOrDownload
+} from './extras.mjs';
 
 const PAGE_SIZE = 24;
-const state = { lines: [], pages: [], page: 0 };
+const state = { lines: [], pages: [], page: 0, speaking: false };
 
 const $ = selector => document.querySelector(selector);
 const els = {
@@ -13,7 +17,9 @@ const els = {
   pageTitle: $('#pageTitle'), pageRange: $('#pageRange'), readerContent: $('#readerContent'),
   pagination: $('#pagination'), prevBtn: $('#prevBtn'), nextBtn: $('#nextBtn'),
   pageSelect: $('#pageSelect'), pagePosition: $('#pagePosition'),
-  loadError: $('#loadError'), loadErrorText: $('#loadErrorText')
+  loadError: $('#loadError'), loadErrorText: $('#loadErrorText'),
+  bookmarkNav: $('#bookmarkNav'), readPageBtn: $('#readPageBtn'), resumeLink: $('#resumeLink'),
+  speechNote: $('#speechNote')
 };
 
 function applyTheme(theme) {
@@ -150,6 +156,7 @@ function renderPage() {
   head.innerHTML = '<div>NGUYÊN VĂN</div><div>GIẢI NGHĨA</div>';
   fragment.append(head);
 
+  const marks = new Set(getBookmarks());
   lines.forEach((line, localIndex) => {
     const absoluteIndex = start + localIndex;
     const row = document.createElement('article');
@@ -161,7 +168,7 @@ function renderPage() {
     const no = document.createElement('span');
     no.className = 'line-no';
     no.textContent = String(absoluteIndex + 1);
-    verse.append(no, makeHighlightedLine(line));
+    verse.append(no, makeHighlightedLine(line), lineActions(absoluteIndex + 1, marks.has(absoluteIndex + 1)));
 
     row.append(verse, buildExplanation(line, absoluteIndex));
     fragment.append(row);
@@ -169,6 +176,7 @@ function renderPage() {
 
   els.readerContent.replaceChildren(fragment);
   history.replaceState(null, '', `#page-${state.page + 1}`);
+  writeJSON(KEYS.page, state.page);
 }
 
 function populatePageSelect() {
@@ -235,15 +243,23 @@ function renderSearch(query) {
 async function boot() {
   renderContextNav();
   try {
-    state.lines = await fetchPoem();
+    const saved = cachedLines();
+    state.lines = saved || await fetchPoem();
+    if (!saved) cacheLines(state.lines);
     state.pages = paginate(state.lines, PAGE_SIZE);
     els.lineCount.textContent = state.lines.length.toLocaleString('vi-VN');
-    els.sourceStatus.innerHTML = `Đã tải ${state.lines.length.toLocaleString('vi-VN')} câu · <a href="${SOURCE_PAGE}" target="_blank" rel="noopener">Wikisource ↗</a>`;
+    els.sourceStatus.innerHTML = `${saved ? 'Đã mở' : 'Đã tải'} ${state.lines.length.toLocaleString('vi-VN')} câu · <a href="${SOURCE_PAGE}" target="_blank" rel="noopener">Wikisource ↗</a>`;
+    renderBookmarks();
     populatePageSelect();
     els.pagination.hidden = false;
 
     const hashMatch = location.hash.match(/^#page-(\d+)$/);
-    state.page = hashMatch ? Math.max(0, Number(hashMatch[1]) - 1) : 0;
+    const lastPage = Number(readJSON(KEYS.page, 0)) || 0;
+    state.page = hashMatch ? Math.max(0, Number(hashMatch[1]) - 1) : lastPage;
+    if (!hashMatch && lastPage > 0 && lastPage < state.pages.length) {
+      els.resumeLink.hidden = false;
+      els.resumeLink.textContent = `Đọc tiếp trang ${lastPage + 1} →`;
+    }
     renderPage();
   } catch (error) {
     els.sourceStatus.textContent = 'Không tải được nguồn văn bản.';
@@ -277,6 +293,105 @@ document.addEventListener('keydown', event => {
   if (event.target.matches('input,select,textarea')) return;
   if (event.key === 'ArrowLeft' && state.pages.length) goToPage(state.page - 1);
   if (event.key === 'ArrowRight' && state.pages.length) goToPage(state.page + 1);
+});
+
+/* ---------- Line actions: bookmark, read aloud, image ---------- */
+
+function lineActions(lineNo, marked) {
+  const wrap = document.createElement('span');
+  wrap.className = 'line-actions';
+  const make = (action, label, text, pressed) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.action = action;
+    b.dataset.line = String(lineNo);
+    b.title = label;
+    b.setAttribute('aria-label', `${label} câu ${lineNo}`);
+    if (pressed !== undefined) b.setAttribute('aria-pressed', String(pressed));
+    b.textContent = text;
+    return b;
+  };
+  const mark = make('mark', marked ? 'Bỏ đánh dấu' : 'Đánh dấu', marked ? '★' : '☆', marked);
+  if (marked) mark.classList.add('on');
+  wrap.append(mark, make('say', 'Nghe đọc', '🔊'), make('image', 'Tạo ảnh khổ thơ', '🖼'));
+  return wrap;
+}
+
+function renderBookmarks() {
+  const marks = getBookmarks().filter(n => n <= state.lines.length);
+  els.bookmarkNav.replaceChildren();
+  if (!marks.length) {
+    const empty = document.createElement('p');
+    empty.className = 'bookmark-empty';
+    empty.textContent = 'Bấm ☆ cạnh một câu để lưu lại.';
+    els.bookmarkNav.append(empty);
+    return;
+  }
+  marks.forEach(n => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bookmark-link';
+    const no = document.createElement('span');
+    no.textContent = String(n);
+    const text = document.createElement('b');
+    text.textContent = state.lines[n - 1];
+    b.append(no, text);
+    b.addEventListener('click', () => { goToLine(n - 1); els.sidebar.classList.remove('open'); });
+    els.bookmarkNav.append(b);
+  });
+}
+
+function setSpeaking(on) {
+  state.speaking = on;
+  els.readPageBtn.textContent = on ? '⏹ Dừng đọc' : '🔊 Đọc trang';
+}
+
+function speak(lines) {
+  if (!vietnameseVoice()) {
+    els.speechNote.hidden = false;
+    els.speechNote.textContent = 'Máy của bạn chưa có giọng đọc tiếng Việt nên giọng đọc có thể không chuẩn. Có thể cài thêm giọng tiếng Việt trong cài đặt ngôn ngữ của máy.';
+  }
+  setSpeaking(true);
+  if (!speakLines(lines, { onEnd: () => setSpeaking(false) })) {
+    setSpeaking(false);
+    els.speechNote.hidden = false;
+    els.speechNote.textContent = 'Trình duyệt này không hỗ trợ đọc to.';
+  }
+}
+
+els.readerContent.addEventListener('click', async event => {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+  const lineNo = Number(button.dataset.line);
+  if (button.dataset.action === 'mark') {
+    toggleBookmark(lineNo);
+    renderPage();
+    renderBookmarks();
+  } else if (button.dataset.action === 'say') {
+    speak([state.lines[lineNo - 1]]);
+  } else if (button.dataset.action === 'image') {
+    const { start, end } = stanzaRange(lineNo - 1, state.lines.length);
+    button.disabled = true;
+    try {
+      const blob = await renderVerseImage(state.lines.slice(start, end), {
+        from: start + 1, to: end, dark: document.documentElement.classList.contains('dark')
+      });
+      await shareOrDownload(blob, `chinh-phu-ngam-cau-${start + 1}-${end}.png`);
+    } finally {
+      button.disabled = false;
+    }
+  }
+});
+
+els.readPageBtn.addEventListener('click', () => {
+  if (state.speaking) { stopSpeaking(); setSpeaking(false); return; }
+  if (state.pages.length) speak(state.pages[state.page]);
+});
+
+els.resumeLink.addEventListener('click', event => {
+  event.preventDefault();
+  els.resumeLink.hidden = true;
+  goToPage(Number(readJSON(KEYS.page, 0)) || 0);
 });
 
 boot();

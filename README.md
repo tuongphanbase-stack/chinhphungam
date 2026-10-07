@@ -11,6 +11,11 @@ Static web reader for *Chinh phụ ngâm*: original Vietnamese text on the left,
 - Archaic/Hán-Việt/allusion glossary displayed beside matching lines.
 - Search ignores Vietnamese diacritics (`truong thanh` finds `Trường Thành`).
 - Light/dark theme.
+- Remembers the text after the first load, so later visits open instantly and work offline.
+- Resume where you left off ("Đọc tiếp trang …").
+- Bookmarks: ☆ beside a line saves it to the sidebar list.
+- Read aloud: 🔊 for one line, or "Đọc trang" for the whole page (browser's Vietnamese voice).
+- Verse images: 🖼 turns the line's four-line stanza into a square image to share or download (matches the light/dark theme).
 - System fonts only, so Vietnamese glyphs do not depend on a webfont download.
 - No framework, backend, build step, or external runtime dependency besides the Wikisource text request.
 

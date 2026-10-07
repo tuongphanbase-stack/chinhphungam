@@ -29,6 +29,8 @@
       <a class="nav-main active" href="#home">Giới thiệu</a>
       <div class="side-heading section-label">MẠCH TÁC PHẨM</div>
       <nav id="contextNav"></nav>
+      <div class="side-heading section-label">CÂU ĐÃ ĐÁNH DẤU</div>
+      <nav id="bookmarkNav" class="bookmark-nav"></nav>
       <div class="side-stat">
         <b id="lineCount">—</b>
         <span>câu đang đọc từ Wikisource</span>
@@ -43,6 +45,7 @@
         <p class="lead">Mỗi câu thơ nằm ngay cạnh phần giải thích tiếng Việt hiện đại. Từ cổ, Hán-Việt, điển tích và cách nói văn chương được tách riêng để có thể đọc tác phẩm mà không phải liên tục tra cứu nơi khác.</p>
         <div class="hero-actions">
           <a class="primary" href="#reader">Bắt đầu đọc →</a>
+          <a id="resumeLink" class="resume-link" href="#reader" hidden>Đọc tiếp →</a>
           <span id="sourceStatus" class="source-status" aria-live="polite">Đang tải văn bản từ Wikisource…</span>
         </div>
       </section>
@@ -65,8 +68,12 @@
             <small>NGUYÊN VĂN · HIỂU ĐƠN GIẢN · TỪ KHÓ</small>
             <h2 id="pageTitle">Đang tải…</h2>
           </div>
-          <span id="pageRange">—</span>
+          <div class="reader-head-actions">
+            <button id="readPageBtn" class="read-btn" type="button">🔊 Đọc trang</button>
+            <span id="pageRange">—</span>
+          </div>
         </div>
+        <p id="speechNote" class="speech-note" hidden></p>
 
         <div id="loadError" class="load-error" hidden>
           <strong>Không tải được văn bản.</strong>
