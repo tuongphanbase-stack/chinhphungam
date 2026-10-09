@@ -25,6 +25,6 @@ test('index loads the shared look before the site stylesheet, and links the sist
   assert.ok(order.every(i => i > 0) && order[0] < order[1] && order[1] < order[2], 'site.js, site.css, style.css in order');
   assert.ok(html.indexOf('src="js/site.js"') < html.indexOf('</head>'), 'site.js runs in <head> (theme before first paint)');
   assert.match(html, /data-theme-key="chinhphungam_theme"/);
-  assert.match(html, /href="https:\/\/tuongphanbase-stack\.github\.io\/truyenkieu\/"/);
-  assert.match(html, /href="https:\/\/tuongphanbase-stack\.github\.io\/emailer-dashboard\/projects\.html"/);
+  assert.match(html, /href="https:\/\/tuongphanbase\.github\.io\/truyenkieu\/"/);
+  assert.match(html, /href="https:\/\/tuongphanbase\.github\.io\/emailer-dashboard\/projects\.html"/);
 });

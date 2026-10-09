@@ -63,7 +63,7 @@ test('the service worker precaches every file the page loads, and only existing 
 });
 
 test('service worker: cache-first shell, network-first fallback, leaves Wikisource and other projects alone', async () => {
-  const ORIGIN = 'https://tuongphanbase-stack.github.io';
+  const ORIGIN = 'https://tuongphanbase.github.io';
   const SCOPE = `${ORIGIN}/chinhphungam/`;
   const net = { online: true, calls: [], files: new Map() };
   for (const entry of SHELL) net.files.set(new URL(entry, SCOPE).pathname, `body of ${entry}`);

@@ -19,7 +19,7 @@ Static web reader for *Chinh phụ ngâm*: original Vietnamese text on the left,
 - System fonts only, so Vietnamese glyphs do not depend on a webfont download.
 - No framework, backend, build step, or external runtime dependency besides the Wikisource text request.
 - **Installable app that works offline** (see below).
-- Same look as its sister site, the [Truyện Kiều reader](https://tuongphanbase-stack.github.io/truyenkieu/), with its own indigo accent; the footer links to it and to the [project list](https://tuongphanbase-stack.github.io/emailer-dashboard/projects.html).
+- Same look as its sister site, the [Truyện Kiều reader](https://tuongphanbase.github.io/truyenkieu/), with its own indigo accent; the footer links to it and to the [project list](https://tuongphanbase.github.io/emailer-dashboard/projects.html).
 
 ## Install on a phone
 
